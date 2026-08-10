@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー登録</title>
+</head>
+<body>
+
+<h1>ユーザー登録</h1>
+
+<form th:action="@{/users-page/add}"
+      th:object="${userForm}"
+      method="post">
+
+    <div>
+        名前:
+        <input type="text" th:field="*{name}">
+    </div>
+
+    <div style="color:red"
+         th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}">
+    </div>
+
+    <br>
+
+    <div>
+        年齢:
+        <input type="number" th:field="*{age}">
+    </div>
+
+    <div style="color:red"
+         th:if="${#fields.hasErrors('age')}"
+         th:errors="*{age}">
+    </div>
+
+    <br>
+
+    <button type="submit">
+        登録
+    </button>
+
+</form>
+
+<br><br>
+
+<a th:href="@{/users-page}">
+    一覧へ戻る
+</a>
+
+</body>
+</html>

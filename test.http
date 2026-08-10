@@ -1,0 +1,64 @@
+# ユーザー登録テスト
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Sato",
+  "age": 35
+}
+
+###
+
+# 異常系
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "",
+  "age": -1
+}
+
+
+
+
+###
+
+# ユーザー更新テスト
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Yamamoto",
+  "age": 52
+}
+
+###
+
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "name": "Suzuki",
+    "age": 40
+}
+
+
+###
+
+
+
+# ユーザー削除テスト
+DELETE http://localhost:8080/users/1
+
+###
+# 正常系
+GET http://localhost:8080/users/1
+
+###
+# 異常系
+GET http://localhost:8080/users/999
+
+###
+# 全件取得
+GET http://localhost:8080/users
