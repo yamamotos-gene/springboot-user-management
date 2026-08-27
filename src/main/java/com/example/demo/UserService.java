@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public User createUser(User user) {
@@ -46,6 +47,7 @@ public class UserService {
     }
 
     public List<User> searchUsers(String name) {
-        return userRepository.findByNameContaining(name);
+        return userRepository.findByNameContaining(
+                name, Sort.by(Sort.Direction.ASC, "id"));
     }
 }
