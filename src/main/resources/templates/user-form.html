@@ -36,6 +36,18 @@
 
     <br>
 
+    <div>
+        住所:
+        <input type="text" th:field="*{address}" maxlength="255">
+    </div>
+
+    <div style="color:red"
+         th:if="${#fields.hasErrors('address')}"
+         th:errors="*{address}">
+    </div>
+
+    <br>
+
     <button type="submit">
         登録
     </button>

@@ -22,11 +22,23 @@ public class ViewController {
     }
 
     @GetMapping("/users-page")
-    public String usersPage(Model model) {
+    public String showUsers(
+            @RequestParam(required = false) String keyword,
+            Model model) {
 
-        model.addAttribute(
-                "users",
-                userService.findAll());
+        if (keyword != null && !keyword.isBlank()) {
+
+            model.addAttribute(
+                    "users",
+                    userService.searchUsers(keyword));
+
+        } else {
+
+            model.addAttribute(
+                    "users",
+                    userService.findAll());
+
+        }
 
         return "users";
     }
@@ -54,7 +66,8 @@ public class ViewController {
                 new User(
                         null,
                         userForm.getName(),
-                        userForm.getAge());
+                        userForm.getAge(),
+                        userForm.getAddress());
 
         userService.createUser(user);
 
@@ -82,6 +95,7 @@ public class ViewController {
 
         userForm.setName(user.getName());
         userForm.setAge(user.getAge());
+        userForm.setAddress(user.getAddress());
 
         model.addAttribute(
                 "userId",
@@ -112,7 +126,8 @@ public class ViewController {
                 new User(
                         id,
                         userForm.getName(),
-                        userForm.getAge());
+                        userForm.getAge(),
+                        userForm.getAddress());
 
         userService.updateUser(user);
 

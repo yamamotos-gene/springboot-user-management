@@ -90,16 +90,5 @@ public class HelloController {
             @PathVariable int id) {
             return "User " + id + " deleted";
         }
-    /*
-    @GetMapping("/users-page")
-    public String usersPage(Model model) {
-
-        model.addAttribute(
-                "users",
-                userService.findAll());
-
-        return "users";
-    }
-    */
 
 }

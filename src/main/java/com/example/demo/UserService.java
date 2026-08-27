@@ -45,4 +45,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public List<User> searchUsers(String name) {
+        return userRepository.findByNameContaining(name);
+    }
 }
