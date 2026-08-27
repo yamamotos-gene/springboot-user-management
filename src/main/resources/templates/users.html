@@ -17,7 +17,6 @@
         .table thead { background:linear-gradient(135deg,var(--primary-color) 0%,var(--secondary-color) 100%); color:white; }
         .table thead th { text-align:center; }
         .action-buttons { display:flex; gap:8px; justify-content:center; }
-        .badge-age { background-color:#e7f3ff; color:var(--primary-color); padding:4px 10px; border-radius:20px; }
     </style>
 </head>
 <body>
@@ -50,7 +49,7 @@
             <tr>
                 <th>ID</th>
                 <th>名前</th>
-                <th>年齢</th>
+                <th class="text-end">年齢</th>
                 <th>住所</th>
                 <th>操作</th>
             </tr>
@@ -59,7 +58,7 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.name}"></td>
-                <td style="text-align:center"><span class="badge-age" th:text="${user.age} + '歳'"></span></td>
+                <td class="text-end" th:text="${user.age} + '歳'"></td>
                 <td th:text="${user.address}"></td>
                 <td>
                     <div class="action-buttons">
