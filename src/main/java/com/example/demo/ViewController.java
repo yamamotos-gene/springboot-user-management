@@ -132,7 +132,8 @@ public class ViewController {
                         null,
                         userForm.getName(),
                         userForm.getAge(),
-                        userForm.getAddress());
+                        userForm.getAddress(),
+                        userForm.getBirthday());
 
         try {
             userService.createUser(user);
@@ -166,6 +167,7 @@ public class ViewController {
         userForm.setName(user.getName());
         userForm.setAge(user.getAge());
         userForm.setAddress(user.getAddress());
+        userForm.setBirthday(user.getBirthday());
         userForm.setVersion(user.getVersion());
 
         model.addAttribute(
@@ -199,7 +201,8 @@ public class ViewController {
                         userForm.getVersion(),
                         userForm.getName(),
                         userForm.getAge(),
-                        userForm.getAddress());
+                        userForm.getAddress(),
+                        userForm.getBirthday());
 
         try {
             userService.updateUser(user);

@@ -41,6 +41,13 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">生年月日</label>
+            <input type="date"
+                   th:field="*{birthday}"
+                   class="form-control">
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">住所</label>
             <input type="text" th:field="*{address}" maxlength="255" class="form-control">
             <div class="text-danger"

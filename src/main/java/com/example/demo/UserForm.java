@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 public class UserForm {
 
     private Long version;
@@ -19,6 +21,8 @@ public class UserForm {
     @NotBlank(message = "住所は必須です")
     @Size(max = 255, message = "住所は255文字以内で入力してください")
     private String address;
+
+    private LocalDate birthday;
 
     public Long getVersion() {
         return version;
@@ -50,5 +54,13 @@ public class UserForm {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }

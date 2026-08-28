@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,11 +41,19 @@ public class User {
     @Column(nullable = false, length = 255)
     private String address;
 
+    private LocalDate birthday;
+
     public User(Long id, String name, int age, String address) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.address = address;
+        this(id, null, name, age, address, null);
+    }
+
+    public User(
+            Long id,
+            String name,
+            int age,
+            String address,
+            LocalDate birthday) {
+        this(id, null, name, age, address, birthday);
     }
 
     public User(
@@ -51,12 +61,14 @@ public class User {
             Long version,
             String name,
             int age,
-            String address) {
+            String address,
+            LocalDate birthday) {
         this.id = id;
         this.version = version;
         this.name = name;
         this.age = age;
         this.address = address;
+        this.birthday = birthday;
     }
 
     /*
