@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 
 public class UserForm {
 
+    private Long version;
+
     @NotBlank(message = "名前は必須です")
     private String name;
 
@@ -17,6 +19,14 @@ public class UserForm {
     @NotBlank(message = "住所は必須です")
     @Size(max = 255, message = "住所は255文字以内で入力してください")
     private String address;
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 
     public String getName() {
         return name;

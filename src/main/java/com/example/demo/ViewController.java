@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @Controller
 public class ViewController {
@@ -69,7 +70,12 @@ public class ViewController {
                         userForm.getAge(),
                         userForm.getAddress());
 
-        userService.createUser(user);
+        try {
+            userService.createUser(user);
+        } catch (DuplicateUserException e) {
+            bindingResult.reject("duplicateUser", e.getMessage());
+            return "user-form";
+        }
 
         return "redirect:/users-page";
     }
@@ -96,6 +102,7 @@ public class ViewController {
         userForm.setName(user.getName());
         userForm.setAge(user.getAge());
         userForm.setAddress(user.getAddress());
+        userForm.setVersion(user.getVersion());
 
         model.addAttribute(
                 "userId",
@@ -125,11 +132,20 @@ public class ViewController {
         User user =
                 new User(
                         id,
+                        userForm.getVersion(),
                         userForm.getName(),
                         userForm.getAge(),
                         userForm.getAddress());
 
-        userService.updateUser(user);
+        try {
+            userService.updateUser(user);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            bindingResult.reject(
+                    "optimisticLocking",
+                    "他のユーザーによって更新されました。最新のデータを確認してください。");
+            model.addAttribute("userId", id);
+            return "user-edit";
+        }
 
         return "redirect:/users-page";
     }

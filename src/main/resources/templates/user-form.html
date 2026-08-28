@@ -12,6 +12,12 @@
       th:object="${userForm}"
       method="post">
 
+    <div style="color:red"
+         th:if="${#fields.hasGlobalErrors()}"
+         th:each="error : ${#fields.globalErrors()}"
+         th:text="${error}">
+    </div>
+
     <div>
         名前:
         <input type="text" th:field="*{name}">
