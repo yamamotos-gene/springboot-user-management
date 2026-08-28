@@ -36,10 +36,18 @@
                 </button>
             </form>
 
-            <a th:href="@{/user-form}" class="btn btn-register">
-                <i class="bi bi-plus-circle"></i>
-                新規登録
-            </a>
+            <div class="d-flex gap-2">
+                <a th:href="@{/users-page/export(keyword=${param.keyword})}"
+                   class="btn btn-outline-success">
+                    <i class="bi bi-download"></i>
+                    CSV出力
+                </a>
+
+                <a th:href="@{/user-form}" class="btn btn-register">
+                    <i class="bi bi-plus-circle"></i>
+                    新規登録
+                </a>
+            </div>
         </div>
     </div>
 

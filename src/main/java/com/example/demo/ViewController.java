@@ -1,5 +1,11 @@
 package com.example.demo;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +48,64 @@ public class ViewController {
         }
 
         return "users";
+    }
+
+    @GetMapping("/users-page/export")
+    public ResponseEntity<byte[]> exportUsers(
+            @RequestParam(required = false) String keyword) {
+
+        List<User> users;
+
+        if (keyword != null && !keyword.isBlank()) {
+            users = userService.searchUsers(keyword);
+        } else {
+            users = userService.findAll();
+        }
+
+        StringBuilder csv = new StringBuilder();
+        csv.append('\uFEFF');
+        csv.append("ID,名前,年齢,住所\r\n");
+
+        for (User user : users) {
+            csv.append(user.getId())
+                    .append(',')
+                    .append(escapeCsv(user.getName()))
+                    .append(',')
+                    .append(user.getAge())
+                    .append(',')
+                    .append(escapeCsv(user.getAddress()))
+                    .append("\r\n");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(
+                new MediaType(
+                        "text",
+                        "csv",
+                        StandardCharsets.UTF_8));
+        headers.set(
+                HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"users.csv\"");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csv.toString()
+                        .getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        if (value.contains(",")
+                || value.contains("\"")
+                || value.contains("\r")
+                || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+
+        return value;
     }
 
     @GetMapping("/user-form")
