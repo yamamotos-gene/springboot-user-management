@@ -130,8 +130,8 @@ public class ViewController {
         User user =
                 new User(
                         null,
+                        null,
                         userForm.getName(),
-                        userForm.getAge(),
                         userForm.getAddress(),
                         userForm.getBirthday());
 
@@ -165,7 +165,6 @@ public class ViewController {
                 new UserForm();
 
         userForm.setName(user.getName());
-        userForm.setAge(user.getAge());
         userForm.setAddress(user.getAddress());
         userForm.setBirthday(user.getBirthday());
         userForm.setVersion(user.getVersion());
@@ -200,7 +199,6 @@ public class ViewController {
                         id,
                         userForm.getVersion(),
                         userForm.getName(),
-                        userForm.getAge(),
                         userForm.getAddress(),
                         userForm.getBirthday());
 

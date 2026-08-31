@@ -31,20 +31,8 @@
     <br>
 
     <div>
-        年齢:
-        <input type="number" th:field="*{age}">
-    </div>
-
-    <div style="color:red"
-         th:if="${#fields.hasErrors('age')}"
-         th:errors="*{age}">
-    </div>
-
-    <br>
-
-    <div>
-        生年月日:
-        <input type="date" th:field="*{birthday}">
+        生年月日（必須）:
+        <input type="date" th:field="*{birthday}" required>
     </div>
 
     <br>

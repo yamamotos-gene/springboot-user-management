@@ -24,8 +24,6 @@ public class UserE2ETest {
             page.navigate("http://localhost:8080/user-form");
             page.fill("#name", "山田太郎");
 
-            page.fill("#age", "30");
-
             page.fill("#birthday", "1995-01-01");
 
             page.fill("#address", "東京都千代田区");

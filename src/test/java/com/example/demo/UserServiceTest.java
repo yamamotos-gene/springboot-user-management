@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,12 @@ class UserServiceTest {
     void findByIdTest() {
 
         User expectedUser =
-                new User(1L, "Sato", 35, "Tokyo");
+                new User(
+                        1L,
+                        null,
+                        "Sato",
+                        "Tokyo",
+                        LocalDate.now().minusYears(35));
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(expectedUser));
@@ -45,11 +51,11 @@ class UserServiceTest {
         assertEquals("Sato",
                 actualUser.getName());
 
-        assertEquals(35,
-                actualUser.getAge());
-
         assertEquals("Tokyo",
                 actualUser.getAddress());
+
+        assertEquals(35,
+                actualUser.getAge());
     }
 
     @Test
@@ -69,8 +75,8 @@ class UserServiceTest {
 
         UserForm userForm = new UserForm();
         userForm.setName("Sato");
-        userForm.setAge(35);
         userForm.setAddress("");
+        userForm.setBirthday(LocalDate.of(1990, 1, 1));
 
         assertTrue(
                 validator.validate(userForm)
@@ -86,8 +92,8 @@ class UserServiceTest {
 
         UserForm userForm = new UserForm();
         userForm.setName("Sato");
-        userForm.setAge(35);
         userForm.setAddress("a".repeat(255));
+        userForm.setBirthday(LocalDate.of(1990, 1, 1));
 
         assertFalse(
                 validator.validate(userForm)
@@ -103,8 +109,8 @@ class UserServiceTest {
 
         UserForm userForm = new UserForm();
         userForm.setName("Sato");
-        userForm.setAge(35);
         userForm.setAddress("a".repeat(256));
+        userForm.setBirthday(LocalDate.of(1990, 1, 1));
 
         assertTrue(
                 validator.validate(userForm)
@@ -113,6 +119,22 @@ class UserServiceTest {
                                 error.getPropertyPath()
                                         .toString()
                                         .equals("address")));
+    }
+
+    @Test
+    void birthdayRequiredTest() {
+
+        UserForm userForm = new UserForm();
+        userForm.setName("Sato");
+        userForm.setAddress("Tokyo");
+
+        assertTrue(
+                validator.validate(userForm)
+                        .stream()
+                        .anyMatch(error ->
+                                error.getPropertyPath()
+                                        .toString()
+                                        .equals("birthday")));
     }
 
 

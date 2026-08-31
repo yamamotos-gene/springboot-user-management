@@ -33,18 +33,11 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">年齢</label>
-            <input type="number" th:field="*{age}" class="form-control">
-            <div class="text-danger"
-                 th:if="${#fields.hasErrors('age')}"
-                 th:errors="*{age}"></div>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">生年月日</label>
+            <label class="form-label">生年月日（必須）</label>
             <input type="date"
                    th:field="*{birthday}"
-                   class="form-control">
+                   class="form-control"
+                   required>
         </div>
 
         <div class="mb-3">

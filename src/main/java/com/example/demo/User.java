@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -34,9 +33,6 @@ public class User {
     @NotBlank(message = "名前は必須です")
     private String name;
 
-    @Min(value = 0, message = "年齢は0以上で入力してください")
-    private int age;
-
     @NotBlank(message = "住所は必須です")
     @Size(max = 255, message = "住所は255文字以内で入力してください")
     @Column(nullable = false, length = 255)
@@ -44,19 +40,26 @@ public class User {
 
     private LocalDate birthday;
 
+    /*
+     * These constructors keep existing callers source-compatible during the
+     * migration. The age argument is no longer stored.
+     */
+    @Deprecated
     public User(Long id, String name, int age, String address) {
-        this(id, null, name, age, address, null);
+        this(id, null, name, address, null);
     }
 
+    @Deprecated
     public User(
             Long id,
             String name,
             int age,
             String address,
             LocalDate birthday) {
-        this(id, null, name, age, address, birthday);
+        this(id, null, name, address, birthday);
     }
 
+    @Deprecated
     public User(
             Long id,
             Long version,
@@ -64,39 +67,27 @@ public class User {
             int age,
             String address,
             LocalDate birthday) {
+        this(id, version, name, address, birthday);
+    }
+
+    public User(
+            Long id,
+            Long version,
+            String name,
+            String address,
+            LocalDate birthday) {
         this.id = id;
         this.version = version;
         this.name = name;
-        this.age = age;
         this.address = address;
         this.birthday = birthday;
     }
 
-    public int getDisplayAge() {
+    public int getAge() {
         if (birthday == null) {
-            return age;
+            return 0;
         }
 
-        return Period.between(
-                birthday,
-                LocalDate.now()).getYears();
+        return Period.between(birthday, LocalDate.now()).getYears();
     }
-
-    /*
-    public User(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    public User() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-    */
 }
