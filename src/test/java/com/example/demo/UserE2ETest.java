@@ -36,5 +36,7 @@ public class UserE2ETest {
 
             browser.close();
         }
+
     }
+
 }
