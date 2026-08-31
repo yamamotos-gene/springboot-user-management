@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,6 +70,16 @@ public class User {
         this.age = age;
         this.address = address;
         this.birthday = birthday;
+    }
+
+    public int getDisplayAge() {
+        if (birthday == null) {
+            return age;
+        }
+
+        return Period.between(
+                birthday,
+                LocalDate.now()).getYears();
     }
 
     /*

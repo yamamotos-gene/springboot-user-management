@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
@@ -113,5 +114,7 @@ class UserServiceTest {
                                         .toString()
                                         .equals("address")));
     }
+
+
 
 }
