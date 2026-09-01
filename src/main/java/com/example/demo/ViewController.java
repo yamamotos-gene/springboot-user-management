@@ -3,24 +3,27 @@ package com.example.demo;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.validation.Valid;
-import org.springframework.validation.BindingResult;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-
 @Controller
 public class ViewController {
+
+    private static final int PAGE_SIZE = 20;
 
     private final UserService userService;
 
@@ -30,22 +33,36 @@ public class ViewController {
 
     @GetMapping("/users-page")
     public String showUsers(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String keyword,
             Model model) {
 
-        if (keyword != null && !keyword.isBlank()) {
-
-            model.addAttribute(
-                    "users",
-                    userService.searchUsers(keyword));
-
-        } else {
-
-            model.addAttribute(
-                    "users",
-                    userService.findAll());
-
+        if (page < 0) {
+            page = 0;
         }
+
+        Pageable pageable =
+                PageRequest.of(
+                        page,
+                        PAGE_SIZE,
+                        Sort.by(Sort.Direction.ASC, "id"));
+
+        Page<User> userPage;
+
+        if (keyword != null && !keyword.isBlank()) {
+            userPage = userService.searchUsers(keyword, pageable);
+            model.addAttribute("keyword", keyword);
+        } else {
+            userPage = userService.findAll(pageable);
+            model.addAttribute("keyword", "");
+        }
+
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+        model.addAttribute("hasPrevious", userPage.hasPrevious());
+        model.addAttribute("hasNext", userPage.hasNext());
+        model.addAttribute("totalElements", userPage.getTotalElements());
 
         return "users";
     }
@@ -56,10 +73,16 @@ public class ViewController {
 
         List<User> users;
 
+        Pageable pageable =
+                PageRequest.of(
+                        0,
+                        Integer.MAX_VALUE,
+                        Sort.by(Sort.Direction.ASC, "id"));
+
         if (keyword != null && !keyword.isBlank()) {
-            users = userService.searchUsers(keyword);
+            users = userService.searchUsers(keyword, pageable).getContent();
         } else {
-            users = userService.findAll();
+            users = userService.findAll(pageable).getContent();
         }
 
         StringBuilder csv = new StringBuilder();
@@ -153,6 +176,7 @@ public class ViewController {
 
         return "redirect:/users-page";
     }
+
     @GetMapping("/users/edit/{id}")
     public String editForm(
             @PathVariable Long id,
@@ -169,13 +193,8 @@ public class ViewController {
         userForm.setBirthday(user.getBirthday());
         userForm.setVersion(user.getVersion());
 
-        model.addAttribute(
-                "userId",
-                id);
-
-        model.addAttribute(
-                "userForm",
-                userForm);
+        model.addAttribute("userId", id);
+        model.addAttribute("userForm", userForm);
 
         return "user-edit";
     }
@@ -188,9 +207,7 @@ public class ViewController {
             Model model) {
 
         if (bindingResult.hasErrors()) {
-
             model.addAttribute("userId", id);
-
             return "user-edit";
         }
 

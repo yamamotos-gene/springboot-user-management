@@ -2,6 +2,8 @@ package com.example.demo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -24,16 +26,16 @@ public class UserService {
     public User getUser() {
         return userRepository.findById(1L)
                 .orElseThrow(() ->
-        new UserNotFoundException("User not found"));
+                        new UserNotFoundException("User not found"));
     }
 
     public User findById(Long id) {
-
         return userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException(
                                 "User not found. id=" + id));
     }
+
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -48,6 +50,24 @@ public class UserService {
         logger.info(
                 "ユーザー一覧取得完了 件数={}",
                 users.size());
+
+        return users;
+    }
+
+    public Page<User> findAll(Pageable pageable) {
+        logger.info(
+                "ユーザー一覧取得開始 page={} size={}",
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+        Page<User> users =
+                userRepository.findAll(pageable);
+
+        logger.info(
+                "ユーザー一覧取得完了 件数={} totalElements={} totalPages={}",
+                users.getNumberOfElements(),
+                users.getTotalElements(),
+                users.getTotalPages());
 
         return users;
     }
@@ -125,6 +145,25 @@ public class UserService {
         logger.info(
                 "ユーザー検索結果 件数={}",
                 users.size());
+
+        return users;
+    }
+
+    public Page<User> searchUsers(String keyword, Pageable pageable) {
+        logger.info(
+                "ユーザー検索 keyword={} page={} size={}",
+                keyword,
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+        Page<User> users =
+                userRepository.findByNameContaining(keyword, pageable);
+
+        logger.info(
+                "ユーザー検索結果 件数={} totalElements={} totalPages={}",
+                users.getNumberOfElements(),
+                users.getTotalElements(),
+                users.getTotalPages());
 
         return users;
     }
